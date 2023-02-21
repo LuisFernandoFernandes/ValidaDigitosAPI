@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ValidaDigitosAPI.DTOs;
-using ValidaDigitosAPI.Models;
 using ValidaDigitosAPI.Services;
 
 namespace ValidaDigitosAPI.Controllers
@@ -16,8 +15,8 @@ namespace ValidaDigitosAPI.Controllers
             _service = new DocumentosService();
         }
 
-        [HttpPost]
-        public ActionResult<Documentos> ValidaDigitos([FromBody] DocumentoRequest request)
+        [HttpGet("validar")]
+        public ActionResult<bool> Validar([FromQuery] DocumentoRequest request)
         {
             try
             {
@@ -32,5 +31,23 @@ namespace ValidaDigitosAPI.Controllers
                 return Problem("Algo deu errado, contate o administrador.");
             }
         }
+
+        [HttpGet("gerar")]
+        public ActionResult<string> Gerar([FromQuery] GeracaoRequest request)
+        {
+            try
+            {
+                return Ok(_service.Gerar(request));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return Problem("Algo deu errado, contate o administrador.");
+            }
+        }
+
     }
 }
